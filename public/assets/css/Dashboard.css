@@ -190,6 +190,20 @@ body {
     padding: 20px 0;
 }
 
+.badge-draft {
+    display: inline-block;
+    background: #f97316;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
 @media (max-width: 600px) {
     #kpi-grid { grid-template-columns: 1fr 1fr; }
     .kpi-value { font-size: 28px; }
