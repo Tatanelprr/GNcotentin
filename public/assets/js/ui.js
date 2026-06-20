@@ -5,7 +5,7 @@ function buildHeader(isAdmin) {
   return `
   <style>
     :root { --primary-color: rgb(97,0,0); --text-white: #fff; }
-    #header { background-color: var(--primary-color); height: 120px; padding: 0 5vh; display: flex; align-items: center; justify-content: space-between; margin-bottom: 2vh; font-family: Arial, sans-serif; overflow: hidden; }
+    #header { background-color: var(--primary-color); height: 120px; padding: 0 5vh; display: flex; align-items: center; justify-content: space-between; margin-bottom: 2vh; font-family: Arial, sans-serif; overflow: visible; }
     .header-left { display: flex; align-items: center; height: 100%; min-width: 0; }
     #MainLogo { height: 90%; width: auto; flex-shrink: 0; }
     #MainTitle { color: var(--text-white); margin: 0; font-size: clamp(18px, 3vw, 50px); padding-left: 20px; font-family: Impact, 'Arial Narrow Bold', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

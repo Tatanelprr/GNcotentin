@@ -20,8 +20,8 @@ body { margin: 0; padding: 0; background: var(--bg); font-family: Arial, sans-se
 #calendar-grid { padding: 20px; }
 .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 8px; }
 .cal-weekday { text-align: center; font-size: 13px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; padding: 8px 0; }
-.cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-.cal-day { min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; font-size: 18px; color: var(--text); cursor: default; }
+.cal-days { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 90px; gap: 6px; }
+.cal-day { display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; font-size: 18px; color: var(--text); cursor: default; }
 .cal-day.other-month { color: #ccc; }
 .cal-day.today { background: #f0e8e8; font-weight: bold; }
 .cal-day.has-event { cursor: pointer; }
