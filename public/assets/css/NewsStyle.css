@@ -273,6 +273,11 @@ body {
 }
 .btn-share:hover { opacity: 0.85; }
 
+.btn-share-native {
+    background: var(--primary);
+    color: white;
+}
+
 .btn-share-facebook {
     background: #1877F2;
     color: white;

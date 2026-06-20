@@ -90,8 +90,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const shareSection = document.getElementById('share-section')
     const fbBtn = document.getElementById('share-facebook')
     const waBtn = document.getElementById('share-whatsapp')
+    const nativeBtn = document.getElementById('share-native')
     fbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
     waBtn.href = `https://wa.me/?text=${encodeURIComponent(news.title + ' ' + url)}`
+    if (navigator.share) {
+      nativeBtn.style.display = 'inline-flex'
+      nativeBtn.addEventListener('click', () => {
+        navigator.share({ title: news.title, text: news.resume || '', url }).catch(() => {})
+      })
+    }
     shareSection.style.display = 'flex'
 
   } catch (e) {
