@@ -1,6 +1,6 @@
 import { auth, db } from './firebase-init.js'
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js'
-import { doc, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js'
+import { doc, setDoc, getDoc, getDocs, query, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js'
 import { uploadToCloudinary } from './cloudinary.js'
 
 const editId = new URLSearchParams(location.search).get('id')
@@ -157,7 +157,8 @@ function imgPanel(id) {
         Cliquez pour ajouter une image
       </div>
       <input type="file" id="img-input-${id}" accept="image/*" style="display:none">
-      <button class="section-upload-btn" onclick="document.getElementById('img-input-${id}').click()">Choisir une image</button>
+      <button class="section-upload-btn" onclick="document.getElementById('img-input-${id}').click()">Uploader</button>
+      <button class="section-upload-btn" style="background:white;color:rgb(97,0,0);border:2px solid rgb(97,0,0);margin-top:4px;" onclick="pickSectionFromMedia(${id})">Bibliothèque</button>
     </div>
   `
 }
@@ -213,6 +214,74 @@ window.setType = (id, type, btn) => {
 
 window.removeSection = (id) => {
   document.querySelector(`.section-card[data-id="${id}"]`)?.remove()
+}
+
+// ── MÉDIATHÈQUE ──────────────────────────────────────────────────────────────
+
+let mediaCache = null
+let mediaCallback = null
+
+window.openMediaPicker = async (callback) => {
+  mediaCallback = callback
+  const modal = document.getElementById('media-modal')
+  const grid  = document.getElementById('media-grid')
+  modal.style.display = 'flex'
+
+  if (mediaCache) { renderMediaGrid(grid, mediaCache); return }
+
+  grid.innerHTML = '<p style="color:#999;text-align:center;padding:40px;grid-column:1/-1;">Chargement…</p>'
+  try {
+    const snap = await getDocs(query(collection(db, 'news')))
+    const urls = new Set()
+    snap.forEach(d => {
+      const n = d.data()
+      if (n.coverImg) urls.add(n.coverImg)
+      ;(n.sections ?? []).forEach(s => { if (s.imgUrl) urls.add(s.imgUrl) })
+    })
+    mediaCache = [...urls]
+    renderMediaGrid(grid, mediaCache)
+  } catch (e) {
+    grid.innerHTML = '<p style="color:#c00;text-align:center;padding:40px;grid-column:1/-1;">Erreur de chargement</p>'
+  }
+}
+
+function renderMediaGrid(grid, urls) {
+  if (urls.length === 0) {
+    grid.innerHTML = '<p style="color:#999;text-align:center;padding:40px;grid-column:1/-1;">Aucune image disponible</p>'
+    return
+  }
+  grid.innerHTML = ''
+  urls.forEach(url => {
+    const img = document.createElement('img')
+    img.src = url
+    img.style.cssText = 'width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;cursor:pointer;border:3px solid transparent;transition:border-color 0.15s;'
+    img.onmouseover = () => { img.style.borderColor = 'rgb(97,0,0)' }
+    img.onmouseout  = () => { img.style.borderColor = 'transparent' }
+    img.onclick = () => { mediaCallback?.(url); closeMediaPicker() }
+    grid.appendChild(img)
+  })
+}
+
+window.closeMediaPicker = () => {
+  document.getElementById('media-modal').style.display = 'none'
+  mediaCallback = null
+}
+
+window.pickCoverFromMedia = () => {
+  openMediaPicker(url => {
+    coverImgUrl = url
+    document.getElementById('cover-preview').innerHTML = `<img src="${url}" alt="cover">`
+  })
+}
+
+window.pickSectionFromMedia = (id) => {
+  const card    = document.querySelector(`.section-card[data-id="${id}"]`)
+  const preview = card?.querySelector(`#img-preview-${id}`)
+  if (!card || !preview) return
+  openMediaPicker(url => {
+    card.dataset.imgUrl = url
+    preview.innerHTML  = `<img src="${url}" alt="">`
+  })
 }
 
 // ── BROUILLON / PRÉVISUALISATION ─────────────────────────────────────────────
