@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return
     }
 
-    snap.forEach(d => {
+    snap.docs.filter(d => d.data().status !== 'draft').forEach(d => {
       const news = d.data()
       const date = news.createdAt?.toDate?.()
       const dateStr = date ? date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''

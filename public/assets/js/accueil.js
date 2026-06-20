@@ -50,7 +50,7 @@ async function loadNews() {
   try {
     const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(4))
     const snap = await getDocs(q)
-    const allDocs = snap.docs
+    const allDocs = snap.docs.filter(d => d.data().status !== 'draft')
     const hasMore = allDocs.length > 3
     const newsList = allDocs.slice(0, 3).map(d => ({ id: d.id, ...d.data() }))
     newsIds = newsList.map(n => n.id)
