@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galerie – GN Cotentin</title>
+    <link rel="stylesheet" href="assets/css/Galerie.css">
+</head>
+<body>
+    <div id="galerie-nav">
+        <a href="accueil.html">Accueil</a>
+        <span class="sep">›</span>
+        <span id="nav-label">Galerie</span>
+    </div>
+
+    <div id="galerie-container">
+        <div id="albums-view">
+            <h1 id="galerie-page-title">Galerie</h1>
+            <div id="albums-grid"></div>
+        </div>
+
+        <div id="album-view">
+            <button id="album-back">← Retour à la galerie</button>
+            <h1 id="album-title"></h1>
+            <p id="album-subtitle"></p>
+            <div id="album-photos-grid"></div>
+        </div>
+    </div>
+
+    <div id="lightbox">
+        <button id="lightbox-close">×</button>
+        <button id="lightbox-prev">‹</button>
+        <img id="lightbox-img" src="" alt="">
+        <button id="lightbox-next">›</button>
+        <span id="lightbox-counter"></span>
+    </div>
+
+    <script type="module" src="assets/js/ui.js"></script>
+    <script type="module" src="assets/js/galerie.js"></script>
+</body>
+</html>
