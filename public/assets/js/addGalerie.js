@@ -92,7 +92,11 @@ window.uploadPhotos = async (input) => {
   const folder = `gncotentin/galerie/${currentAlbumId}`
 
   try {
-    const urls     = await Promise.all(files.map(f => uploadToCloudinary(f, folder)))
+    const results  = await Promise.allSettled(files.map(f => uploadToCloudinary(f, folder)))
+    const urls     = results.filter(r => r.status === 'fulfilled').map(r => r.value)
+    if (urls.length === 0) throw new Error('Tous les uploads ont échoué.')
+    const failed   = results.filter(r => r.status === 'rejected').length
+    if (failed > 0) status.textContent = `${failed} photo${failed > 1 ? 's ont' : ' a'} échoué, les autres sont en cours…`
     const albumRef = doc(db, 'galerie', currentAlbumId)
     const existing = await getDoc(albumRef)
 

@@ -1,11 +1,11 @@
 import { db } from './firebase-init.js'
-import { collection, query, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js'
+import { collection, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
   const container = document.getElementById('newsList')
 
   try {
-    const snap = await getDocs(query(collection(db, 'news'), orderBy('createdAt', 'desc')))
+    const snap = await getDocs(query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(100)))
 
     if (snap.empty) {
       container.innerHTML = '<p id="no-news">Aucune actualité pour le moment.</p>'
