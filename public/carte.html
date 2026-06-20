@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des caches – GN Cotentin</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="assets/css/Carte.css">
+</head>
+<body>
+    <div id="carte-nav">
+        <a href="accueil.html">Accueil</a>
+        <span class="sep">›</span>
+        <span>Carte des caches</span>
+    </div>
+
+    <div id="carte-header">
+        <h1 id="carte-title">Carte des caches</h1>
+        <span id="cache-count"></span>
+    </div>
+
+    <div style="position:relative;">
+        <div id="map"></div>
+        <div id="map-status"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script type="module" src="assets/js/ui.js"></script>
+    <script type="module" src="assets/js/carte.js"></script>
+</body>
+</html>

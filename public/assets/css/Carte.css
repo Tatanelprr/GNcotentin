@@ -1,0 +1,25 @@
+:root { --primary: rgb(97,0,0); --bg: #f4f1f0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); font-family: Arial, sans-serif; overflow-x: hidden; }
+
+#header { margin-bottom: 0 !important; }
+
+#carte-nav { background: white; border-bottom: 1px solid #e8e0e0; padding: 16px 32px; display: flex; align-items: center; gap: 8px; font-size: 15px; color: #aaa; }
+#carte-nav a { color: var(--primary); text-decoration: none; font-weight: bold; }
+#carte-nav a:hover { text-decoration: underline; }
+#carte-nav .sep { color: #ccc; }
+
+#carte-header { padding: 20px 32px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+#carte-title { font-family: Impact, Arial, sans-serif; color: var(--primary); font-size: 32px; margin: 0; }
+#cache-count { font-size: 14px; color: #888; font-family: Arial, sans-serif; }
+
+#map { height: calc(100vh - 180px); min-height: 500px; width: 100%; }
+
+#map-status { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; padding: 24px 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); font-size: 16px; color: #888; text-align: center; z-index: 1000; }
+
+@media (max-width: 600px) {
+  #carte-nav { padding: 12px 16px; font-size: 13px; }
+  #carte-header { padding: 16px; }
+  #carte-title { font-size: 24px; }
+  #map { height: calc(100vh - 200px); }
+}
