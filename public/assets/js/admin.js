@@ -8,7 +8,7 @@ onAuthStateChanged(auth, user => {
 })
 
 async function loadDashboard() {
-  await Promise.all([loadVisits(), loadNews()])
+  await Promise.all([loadVisits(), loadNews(), loadEvents()])
 }
 
 async function loadVisits() {
@@ -114,6 +114,52 @@ async function loadNews() {
   } catch (e) {
     console.error('Erreur news :', e)
     container.innerHTML = '<p id="no-news-admin">Erreur lors du chargement.</p>'
+  }
+}
+
+async function loadEvents() {
+  const container = document.getElementById('eventsList')
+  try {
+    const snap = await getDocs(query(collection(db, 'events'), orderBy('date', 'asc')))
+    if (snap.empty) {
+      container.innerHTML = '<p id="no-news-admin">Aucun événement.</p>'
+      return
+    }
+    snap.forEach(d => {
+      const e       = d.data()
+      const date    = e.date?.toDate?.()
+      const dateStr = date
+        ? date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+        : ''
+      const item = document.createElement('div')
+      item.className = 'news-admin-item'
+      item.innerHTML = `
+        <div class="news-admin-info">
+          <div class="news-admin-title">${e.title}</div>
+          <div class="news-admin-date">${dateStr}${e.location ? ' · ' + e.location : ''}</div>
+        </div>
+        <div class="news-admin-actions">
+          <a href="addEvent.html?id=${d.id}" class="btn-view">Modifier</a>
+          <button class="btn-delete" data-id="${d.id}">Supprimer</button>
+        </div>
+      `
+      item.querySelector('.btn-delete').addEventListener('click', () => deleteEvent(d.id, item))
+      container.appendChild(item)
+    })
+  } catch (e) {
+    console.error('Erreur events :', e)
+    container.innerHTML = '<p id="no-news-admin">Erreur lors du chargement.</p>'
+  }
+}
+
+async function deleteEvent(id, element) {
+  if (!confirm('Supprimer cet événement définitivement ?')) return
+  try {
+    await deleteDoc(doc(db, 'events', id))
+    element.remove()
+  } catch (e) {
+    console.error('Erreur suppression event :', e)
+    alert('Erreur lors de la suppression.')
   }
 }
 
