@@ -129,6 +129,7 @@ a {
     cursor: pointer;
     transition: transform 0.2s;
     position: relative;
+    overflow: hidden;
 }
 
 .Info:hover {
@@ -223,4 +224,14 @@ a {
     #News.news-count-3 .info-main { flex: none; height: 260px; }
     #News.news-count-3 .info-secondary { flex: none; height: auto; flex-direction: column; }
     #News.news-count-3 .info-secondary .Info { flex: none; height: 200px; }
+
+    .News_Text { padding: 12px; }
+    .News_Title { font-size: 18px; }
+    .News_Resume {
+        font-size: 13px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 }
