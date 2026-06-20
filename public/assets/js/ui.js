@@ -89,7 +89,10 @@ function buildFooter() {
       <div class="footer-section">
         <h3>Liens Utiles</h3>
         <a href="accueil.html">Accueil</a>
-        <a href="mailto:Gcncotentin@gmail.com">Nous contacter</a>
+        <a href="news-list.html">Actualités</a>
+        <a href="events.html">Événements</a>
+        <a href="galerie.html">Galerie</a>
+        <a href="contact.html">Nous contacter</a>
         <a href="login.html">Espace Admin</a>
       </div>
       <div class="footer-section">

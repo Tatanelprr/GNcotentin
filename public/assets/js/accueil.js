@@ -97,7 +97,7 @@ window.sendToPage = (index) => {
 async function loadUpcomingEvents() {
   try {
     const now  = new Date()
-    const snap = await getDocs(query(collection(db, 'events'), orderBy('date', 'asc')))
+    const snap = await getDocs(query(collection(db, 'events'), orderBy('date', 'asc'), limit(20)))
     const upcoming = snap.docs
       .map(d => ({ id: d.id, ...d.data(), dateObj: d.data().date?.toDate?.() }))
       .filter(e => e.dateObj && e.dateObj >= now)

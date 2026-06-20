@@ -1,6 +1,6 @@
 import { auth, db } from './firebase-init.js'
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js'
-import { collection, query, orderBy, getDocs, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js'
+import { collection, query, orderBy, where, getDocs, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js'
 import { uploadToCloudinary } from './cloudinary.js'
 
 const editId = new URLSearchParams(location.search).get('id')
@@ -38,9 +38,9 @@ async function onEventSelect(eventId) {
   const opt = document.getElementById('event-select').querySelector(`option[value="${eventId}"]`)
   currentEventMeta = { id: eventId, title: opt.dataset.title, dateMs: parseInt(opt.dataset.dateMs) }
 
-  const snap = await getDocs(query(collection(db, 'galerie')))
+  const snap = await getDocs(query(collection(db, 'galerie'), where('eventId', '==', eventId)))
   let found = null
-  snap.forEach(d => { if (d.data().eventId === eventId) found = d.id })
+  snap.forEach(d => { found = d.id })
 
   if (found) {
     currentAlbumId = found

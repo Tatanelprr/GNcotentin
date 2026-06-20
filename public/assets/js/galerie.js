@@ -32,7 +32,7 @@ async function showAlbumsList() {
       card.innerHTML = count > 0
         ? `<img class="album-cover" src="${album.photos[0]}" alt="${album.eventTitle}" loading="lazy">
            <div class="album-info"><p class="album-event-title">${album.eventTitle}</p><p class="album-meta">${dateStr} · ${count} photo${count > 1 ? 's' : ''}</p></div>`
-        : `<div class="album-cover-placeholder">📷</div>
+        : `<div class="album-cover-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><rect x="3" y="7" width="18" height="14" rx="2"/><circle cx="12" cy="14" r="3.5"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
            <div class="album-info"><p class="album-event-title">${album.eventTitle}</p><p class="album-meta">${dateStr} · Aucune photo</p></div>`
       grid.appendChild(card)
     })
