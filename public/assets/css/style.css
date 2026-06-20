@@ -183,6 +183,18 @@ a {
     border: 2px solid var(--primary-color);
 }
 
+/* --- EVENTS ACCUEIL --- */
+#Events { padding-bottom: 30px; }
+.events-accueil-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.event-accueil-card { background: white; border-radius: 12px; padding: 20px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s, box-shadow 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.event-accueil-card:hover { border-color: var(--primary-color); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.event-accueil-date { color: var(--primary-color); font-weight: bold; font-size: 14px; text-transform: capitalize; margin-bottom: 6px; }
+.event-accueil-title { font-size: 16px; font-weight: bold; color: #222; margin-bottom: 4px; }
+.event-accueil-location { font-size: 13px; color: #888; }
+.events-cta { text-align: center; margin-top: 8px; }
+.events-cta a { display: inline-block; padding: 10px 28px; background: var(--primary-color); color: white; border-radius: 25px; font-size: 15px; font-weight: bold; text-decoration: none; transition: opacity 0.2s; }
+.events-cta a:hover { opacity: 0.85; }
+
 /* --- MOBILE (RESPONSIVE CONTENT ONLY) --- */
 @media (max-width: 768px) {
     h1, h2, h3 {

@@ -4,6 +4,7 @@ import { collection, query, orderBy, limit, getDocs } from 'https://www.gstatic.
 document.addEventListener('DOMContentLoaded', () => {
   loadNews()
   trackVisit()
+  loadUpcomingEvents()
 })
 
 async function trackVisit() {
@@ -91,6 +92,39 @@ async function loadNews() {
 
 window.sendToPage = (index) => {
   if (newsIds[index]) location.href = `news.html?id=${newsIds[index]}`
+}
+
+async function loadUpcomingEvents() {
+  try {
+    const now  = new Date()
+    const snap = await getDocs(query(collection(db, 'events'), orderBy('date', 'asc')))
+    const upcoming = snap.docs
+      .map(d => ({ id: d.id, ...d.data(), dateObj: d.data().date?.toDate?.() }))
+      .filter(e => e.dateObj && e.dateObj >= now)
+      .slice(0, 3)
+
+    if (upcoming.length === 0) return
+
+    const section   = document.getElementById('Events')
+    const container = document.getElementById('events-accueil-list')
+    section.style.display = 'block'
+
+    upcoming.forEach(event => {
+      const d       = event.dateObj
+      const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
+      const card    = document.createElement('div')
+      card.className = 'event-accueil-card'
+      card.onclick   = () => location.href = 'events.html'
+      card.innerHTML = `
+        <div class="event-accueil-date">📅 ${dateStr}${event.time ? ' à ' + event.time : ''}</div>
+        <div class="event-accueil-title">${event.title}</div>
+        <div class="event-accueil-location">📍 ${event.location}</div>
+      `
+      container.appendChild(card)
+    })
+  } catch (e) {
+    console.error('Erreur events accueil :', e)
+  }
 }
 
 function getAverageColor(imagePath) {
