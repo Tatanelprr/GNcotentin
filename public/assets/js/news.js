@@ -86,6 +86,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       container.appendChild(section)
     })
 
+    // Boutons de partage
+    const shareSection = document.getElementById('share-section')
+    const fbBtn = document.getElementById('share-facebook')
+    const waBtn = document.getElementById('share-whatsapp')
+    fbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+    waBtn.href = `https://wa.me/?text=${encodeURIComponent(news.title + ' ' + url)}`
+    shareSection.style.display = 'flex'
+
   } catch (e) {
     console.error('Erreur chargement news :', e)
     showError('Erreur lors du chargement de l\'actualité.')
