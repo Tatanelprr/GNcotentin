@@ -49,6 +49,7 @@ function buildHeader(isAdmin) {
           <div class="dropdown-content">
             <a href="addNews.html">Nouvelle actualité</a>
             <a href="addEvent.html">Nouvel événement</a>
+            <a href="addGalerie.html">Nouvel album</a>
           </div>
         </div>
         <button class="header_button" id="logoutLink">Déconnexion</button>
@@ -56,6 +57,7 @@ function buildHeader(isAdmin) {
         <button class="header_button" onclick="location.href='accueil.html'">Accueil</button>
         <button class="header_button" onclick="location.href='news-list.html'">Actualités</button>
         <button class="header_button" onclick="location.href='events.html'">Événements</button>
+        <button class="header_button" onclick="location.href='galerie.html'">Galerie</button>
         <button class="header_button" onclick="location.href='mailto:Gcncotentin@gmail.com'">Nous Contacter</button>
         <button class="header_button" onclick="location.href='login.html'">Connexion</button>
       `}
