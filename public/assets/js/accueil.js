@@ -67,28 +67,15 @@ async function loadNews() {
       newsList.forEach((n, i) => newsEl.appendChild(buildCard(n, i)))
 
     } else {
-      // 3 news : grande à gauche + 2 petites à droite
-      const main = document.createElement('div')
-      main.className = 'info-main'
-      main.appendChild(buildCard(newsList[0], 0).querySelector('.Info').parentElement || buildCard(newsList[0], 0))
-
-      const secondary = document.createElement('div')
-      secondary.className = 'info-secondary'
-      secondary.appendChild(buildCard(newsList[1], 1))
-      secondary.appendChild(buildCard(newsList[2], 2))
-
-      // On recrée proprement
-      newsEl.innerHTML = ''
+      // 3 news : une grande à gauche + 2 petites à droite
       const mainCard = buildCard(newsList[0], 0)
       mainCard.className = 'info-main'
       mainCard.querySelector('.Info').style.height = '100%'
 
       const sec = document.createElement('div')
       sec.className = 'info-secondary'
-      const card2 = buildCard(newsList[1], 1)
-      const card3 = buildCard(newsList[2], 2)
-      sec.appendChild(card2)
-      sec.appendChild(card3)
+      sec.appendChild(buildCard(newsList[1], 1).querySelector('.Info'))
+      sec.appendChild(buildCard(newsList[2], 2).querySelector('.Info'))
 
       newsEl.appendChild(mainCard)
       newsEl.appendChild(sec)
