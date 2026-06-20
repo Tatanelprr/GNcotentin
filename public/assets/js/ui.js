@@ -40,16 +40,22 @@ function buildHeader(isAdmin) {
     </div>
     <div class="header_element">
       ${isAdmin ? `
+        <button class="header_button" onclick="location.href='accueil.html'">Accueil</button>
+        <button class="header_button" onclick="location.href='news-list.html'">Actualités</button>
+        <button class="header_button" onclick="location.href='events.html'">Événements</button>
         <button class="header_button" onclick="location.href='admin.html'">Dashboard</button>
-        <button class="header_button" onclick="location.href='accueil.html'">Site</button>
-        <button class="header_button" onclick="location.href='addNews.html'">+ Nouvelle actualité</button>
-        <button class="header_button" onclick="location.href='news-list.html'">Toutes les actualités</button>
+        <div class="dropdown">
+          <button class="header_button">+ Nouveau ▾</button>
+          <div class="dropdown-content">
+            <a href="addNews.html">Nouvelle actualité</a>
+            <a href="addEvent.html">Nouvel événement</a>
+          </div>
+        </div>
         <button class="header_button" id="logoutLink">Déconnexion</button>
       ` : `
         <button class="header_button" onclick="location.href='accueil.html'">Accueil</button>
-        <button class="header_button" onclick="window.__scrollTo('Assos')">Qui sommes nous ?</button>
+        <button class="header_button" onclick="location.href='news-list.html'">Actualités</button>
         <button class="header_button" onclick="location.href='events.html'">Événements</button>
-        <button class="header_button" onclick="location.href='mailto:Gcncotentin@gmail.com'">Nous Contacter</button>
         <button class="header_button" onclick="location.href='login.html'">Connexion</button>
       `}
     </div>
