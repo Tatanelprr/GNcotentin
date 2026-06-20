@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvel événement - GN Cotentin</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f4f1f0; min-height: 100vh; display: flex; flex-direction: column; }
+        #topbar { background: rgb(97,0,0); color: white; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        #topbar h1 { font-size: 18px; font-family: Arial, sans-serif; font-weight: bold; }
+        .topbar-actions { display: flex; gap: 10px; }
+        .btn { border: none; border-radius: 20px; padding: 8px 20px; font-size: 14px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-ghost { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); }
+        .btn-ghost:hover { border-color: white; }
+        .btn-publish { background: white; color: rgb(97,0,0); }
+        .btn-publish:hover { background: #f0e0e0; }
+        .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(97,0,0,0.3); border-top-color: rgb(97,0,0); border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #form-layout { max-width: 700px; margin: 32px auto; padding: 0 24px 40px; display: flex; flex-direction: column; gap: 16px; }
+        .form-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .form-row { display: flex; gap: 16px; }
+        .form-row .form-card { flex: 1; }
+        .form-card label { display: block; font-size: 12px; font-weight: bold; color: rgb(97,0,0); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .form-card input, .form-card textarea { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: Arial, sans-serif; resize: vertical; transition: border-color 0.2s; }
+        .form-card input:focus, .form-card textarea:focus { outline: none; border-color: rgb(97,0,0); }
+        @media (max-width: 600px) { .form-row { flex-direction: column; } #form-layout { padding: 0 16px 32px; } }
+    </style>
+</head>
+<body>
+    <div id="topbar">
+        <h1>📅 Nouvel événement</h1>
+        <div class="topbar-actions">
+            <button class="btn btn-ghost" onclick="location.href='admin.html'">Abandonner</button>
+            <button class="btn btn-publish" onclick="saveEvent()">
+                <span id="save-label">Publier</span>
+                <span class="spinner" id="save-spinner"></span>
+            </button>
+        </div>
+    </div>
+    <div id="form-layout">
+        <div class="form-card">
+            <label>Titre *</label>
+            <input type="text" id="titleInput" placeholder="Ex : CITO Printemps 2026…" maxlength="120">
+        </div>
+        <div class="form-row">
+            <div class="form-card">
+                <label>Date *</label>
+                <input type="date" id="dateInput">
+            </div>
+            <div class="form-card">
+                <label>Heure (optionnel)</label>
+                <input type="time" id="timeInput">
+            </div>
+        </div>
+        <div class="form-card">
+            <label>Lieu *</label>
+            <input type="text" id="locationInput" placeholder="Ex : Parc de la Victoire, Cherbourg">
+        </div>
+        <div class="form-card">
+            <label>Description *</label>
+            <textarea id="descriptionInput" rows="6" placeholder="Décrivez l'événement…"></textarea>
+        </div>
+        <div class="form-card">
+            <label>Lien externe (optionnel)</label>
+            <input type="url" id="linkInput" placeholder="https://www.geocaching.com/…">
+        </div>
+    </div>
+    <script type="module" src="assets/js/ui.js"></script>
+    <script type="module" src="assets/js/addEvent.js"></script>
+</body>
+</html>
