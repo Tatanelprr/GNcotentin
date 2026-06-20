@@ -9,6 +9,7 @@ const isEdit = !!editId
 let newsId = isEdit ? editId : crypto.randomUUID()
 let coverImgUrl = ''
 let sectionCount = 0
+let draftSaved = false
 
 onAuthStateChanged(auth, async user => {
   if (!user) { location.href = 'login.html'; return }
@@ -54,8 +55,14 @@ async function loadExistingNews() {
       }
     }
 
-    // Adapter le bouton et le titre
-    document.getElementById('publish-label').textContent = 'Mettre à jour'
+    // Adapter les boutons et le titre selon le statut
+    if (news.status === 'draft') {
+      document.getElementById('publish-label').textContent = 'Publier'
+    } else {
+      document.getElementById('btn-draft').style.display   = 'none'
+      document.getElementById('btn-preview').style.display = 'none'
+      document.getElementById('publish-label').textContent = 'Mettre à jour'
+    }
     document.querySelector('#topbar h1').innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:8px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Modifier l'actualité`
 
   } catch (e) {
@@ -208,6 +215,60 @@ window.removeSection = (id) => {
   document.querySelector(`.section-card[data-id="${id}"]`)?.remove()
 }
 
+// ── BROUILLON / PRÉVISUALISATION ─────────────────────────────────────────────
+
+async function saveAsDraft() {
+  const title   = document.getElementById('TitreInput').value.trim()
+  const resume  = document.getElementById('ResumeInput').value.trim()
+  const sections = Array.from(document.querySelectorAll('.section-card')).map(card => ({
+    type:    card.dataset.type,
+    content: card._quill?.root.innerHTML ?? '',
+    imgUrl:  card.dataset.imgUrl || null
+  }))
+  const data = { title, resume, coverImg: coverImgUrl, sections, status: 'draft' }
+  if (!isEdit && !draftSaved) data.createdAt = serverTimestamp()
+  await setDoc(doc(db, 'news', newsId), data, { merge: true })
+  draftSaved = true
+  if (!isEdit) history.replaceState(null, '', `?id=${newsId}`)
+}
+
+window.saveDraft = async () => {
+  if (!document.getElementById('TitreInput').value.trim()) {
+    alert('Le titre est requis.'); document.getElementById('TitreInput').focus(); return
+  }
+  const label   = document.getElementById('draft-label')
+  const spinner = document.getElementById('draft-spinner')
+  label.style.display   = 'none'
+  spinner.style.display = 'inline-block'
+  try {
+    await saveAsDraft()
+  } catch (e) {
+    console.error(e); alert('Erreur lors de la sauvegarde du brouillon.')
+  } finally {
+    label.style.display   = 'inline'
+    spinner.style.display = 'none'
+  }
+}
+
+window.previewDraft = async () => {
+  if (!document.getElementById('TitreInput').value.trim()) {
+    alert('Le titre est requis.'); document.getElementById('TitreInput').focus(); return
+  }
+  const label   = document.getElementById('preview-label')
+  const spinner = document.getElementById('preview-spinner')
+  label.style.display   = 'none'
+  spinner.style.display = 'inline-block'
+  try {
+    await saveAsDraft()
+    window.open(`news.html?id=${newsId}`, '_blank')
+  } catch (e) {
+    console.error(e); alert('Erreur lors de la prévisualisation.')
+  } finally {
+    label.style.display   = 'inline'
+    spinner.style.display = 'none'
+  }
+}
+
 // ── PUBLICATION ──────────────────────────────────────────────────────────────
 
 window.GiveUpNews = () => {
@@ -233,9 +294,9 @@ window.sendNewsFromDivs = async () => {
   }))
 
   try {
-    const data = { title, resume, coverImg: coverImgUrl, sections }
-    if (!isEdit) data.createdAt = serverTimestamp()
-    await setDoc(doc(db, 'news', newsId), data, { merge: isEdit })
+    const data = { title, resume, coverImg: coverImgUrl, sections, status: 'published' }
+    if (!isEdit && !draftSaved) data.createdAt = serverTimestamp()
+    await setDoc(doc(db, 'news', newsId), data, { merge: true })
     location.href = 'admin.html'
   } catch (e) {
     console.error(e)
