@@ -8,13 +8,17 @@
 
 * { box-sizing: border-box; }
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
     padding: 0;
     background: var(--bg);
     font-family: Georgia, 'Times New Roman', serif;
     color: var(--text);
-    overflow-x: hidden;
 }
 
 #header { margin-bottom: 0 !important; }
@@ -149,17 +153,20 @@ body {
 .section-content {
     flex: 1;
     min-width: 0;
+    width: 0; /* force le flex-item à ne pas dépasser */
     font-size: 17px;
     line-height: 1.75;
-    overflow-x: hidden;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    word-break: break-word;
 }
 
-/* Contenu Quill : empêcher tout débordement */
-.section-content img { max-width: 100%; height: auto; display: block; }
-.section-content table { max-width: 100%; overflow-x: auto; display: block; }
-.section-content iframe { max-width: 100%; }
+/* Tout le contenu Quill reste dans son conteneur */
+.section-content * { max-width: 100% !important; }
+.section-content img { height: auto !important; display: block; }
+.section-content table { overflow-x: auto; display: block; white-space: nowrap; }
+.section-content pre { overflow-x: auto; white-space: pre-wrap; }
+.section-content iframe { max-width: 100% !important; }
 
 /* Rendu du contenu Quill */
 .section-content h1, .section-content h2, .section-content h3 {
@@ -221,6 +228,15 @@ body {
 #news-nav a:hover { text-decoration: underline; }
 
 #news-nav .sep { color: #ccc; }
+
+#breadcrumb-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    display: inline-block;
+    vertical-align: middle;
+}
 
 /* ── ERREUR ─────────────────────────────────────────────────────── */
 #news-error {
