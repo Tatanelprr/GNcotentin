@@ -237,6 +237,52 @@ body {
     vertical-align: middle;
 }
 
+/* ── PARTAGE ─────────────────────────────────────────────────────── */
+#share-section {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 24px 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+#share-section span {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 25px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.btn-share:hover { opacity: 0.85; }
+
+.btn-share-facebook {
+    background: #1877F2;
+    color: white;
+}
+
+.btn-share-whatsapp {
+    background: #25D366;
+    color: white;
+}
+
 /* ── ERREUR ─────────────────────────────────────────────────────── */
 #news-error {
     text-align: center;
