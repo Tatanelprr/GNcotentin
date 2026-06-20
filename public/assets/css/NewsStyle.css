@@ -153,7 +153,6 @@ body {
 .section-content {
     flex: 1;
     min-width: 0;
-    width: 0; /* force le flex-item à ne pas dépasser */
     font-size: 17px;
     line-height: 1.75;
     word-wrap: break-word;
