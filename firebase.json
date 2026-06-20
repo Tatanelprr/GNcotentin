@@ -1,0 +1,12 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "redirects": [
+      { "source": "/", "destination": "/accueil.html", "type": 301 }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}

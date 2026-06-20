@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle actualité - GN Cotentin</title>
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f1f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOP BAR */
+        #topbar {
+            background: rgb(97,0,0);
+            color: white;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        #topbar h1 {
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .topbar-actions { display: flex; gap: 10px; }
+
+        .btn { border: none; border-radius: 20px; padding: 8px 20px; font-size: 14px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-ghost { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); }
+        .btn-ghost:hover { border-color: white; }
+        .btn-publish { background: white; color: rgb(97,0,0); }
+        .btn-publish:hover { background: #f0e0e0; }
+
+        /* LAYOUT */
+        #editor-layout {
+            display: flex;
+            gap: 0;
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        /* SIDEBAR */
+        #sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: sticky;
+            top: 84px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .sidebar-card label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: rgb(97,0,0);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-card input[type="text"],
+        .sidebar-card textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        .sidebar-card input[type="text"]:focus,
+        .sidebar-card textarea:focus {
+            outline: none;
+            border-color: rgb(97,0,0);
+        }
+
+        #cover-preview {
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #f0e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px dashed #ccc;
+            color: #999;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 10px;
+            transition: border-color 0.2s;
+            overflow: hidden;
+        }
+
+        #cover-preview:hover { border-color: rgb(97,0,0); }
+        #cover-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+        .upload-btn {
+            width: 100%;
+            background: rgb(97,0,0);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .upload-btn:hover { opacity: 0.85; }
+
+        /* MAIN EDITOR */
+        #main-editor {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fdf7f7;
+            border-bottom: 1px solid #f0e8e8;
+        }
+
+        .section-type {
+            display: flex;
+            gap: 6px;
+        }
+
+        .type-btn {
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #555;
+        }
+
+        .type-btn.active, .type-btn:hover {
+            background: rgb(97,0,0);
+            color: white;
+            border-color: rgb(97,0,0);
+        }
+
+        .section-delete {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #ccc;
+            transition: color 0.2s;
+            padding: 4px 8px;
+        }
+        .section-delete:hover { color: #c00; }
+
+        .section-body {
+            display: flex;
+            gap: 0;
+        }
+
+        .section-text { flex: 1; min-width: 0; }
+        .section-img-panel {
+            width: 200px;
+            flex-shrink: 0;
+            border-left: 1px solid #f0e8e8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            gap: 10px;
+            background: #fdf7f7;
+        }
+
+        .section-img-preview {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #eee;
+            cursor: pointer;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #bbb;
+            font-size: 12px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .section-img-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+
+        .section-img-preview:hover { border-color: rgb(97,0,0); }
+
+        .section-upload-btn {
+            width: 100%;
+            font-size: 12px;
+            padding: 6px;
+            background: rgb(97,0,0);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Section text — flex item isolé */
+        .section-text { flex: 1; min-width: 0; overflow: hidden; }
+        /* Quill wrapper — div neutre hors du contexte flex */
+        .quill-wrap { display: block; width: 100%; }
+        .ql-toolbar.ql-snow { border: none !important; border-bottom: 1px solid #f0e8e8 !important; background: white; display: block; width: 100%; }
+        .ql-container.ql-snow { border: none !important; display: block; width: 100%; }
+        .ql-editor { min-height: 180px; padding: 16px; font-size: 15px; }
+        .ql-editor p { margin-bottom: 8px; }
+
+        /* Add section button */
+        #add-section-bar {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 8px 0 16px;
+        }
+
+        .add-section-btn {
+            background: white;
+            border: 2px solid rgb(97,0,0);
+            color: rgb(97,0,0);
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .add-section-btn:hover { background: rgb(97,0,0); color: white; }
+
+        /* Spinner */
+        .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(97,0,0,0.3); border-top-color: rgb(97,0,0); border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) {
+            #editor-layout { flex-direction: column; padding: 12px; }
+            #sidebar { width: 100%; position: static; }
+            .section-img-panel { width: 150px; }
+        }
+
+        @media (max-width: 600px) {
+            .section-body { flex-direction: column; }
+            .section-img-panel { width: 100%; border-left: none; border-top: 1px solid #f0e8e8; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div id="topbar">
+        <h1><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:8px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Nouvelle actualité</h1>
+        <div class="topbar-actions">
+            <button class="btn btn-ghost" onclick="GiveUpNews()">Abandonner</button>
+            <button class="btn btn-publish" onclick="sendNewsFromDivs()">
+                <span id="publish-label">Publier</span>
+                <span class="spinner" id="publish-spinner"></span>
+            </button>
+        </div>
+    </div>
+
+    <div id="editor-layout">
+
+        <!-- SIDEBAR -->
+        <div id="sidebar">
+
+            <div class="sidebar-card">
+                <label>Image de couverture</label>
+                <div id="cover-preview" onclick="document.getElementById('coverInput').click()">
+                    Cliquez pour uploader une image
+                </div>
+                <input type="file" id="coverInput" accept="image/*" style="display:none" onchange="uploadCover(this)">
+                <div id="cover-loading" style="display:none; text-align:center; font-size:12px; color:#999; margin-bottom:8px;">Upload en cours…</div>
+            </div>
+
+            <div class="sidebar-card">
+                <label>Titre de l'actualité</label>
+                <input type="text" id="TitreInput" placeholder="Ex : GeoVikings 2025…" maxlength="100">
+            </div>
+
+            <div class="sidebar-card">
+                <label>Résumé (affiché sur l'accueil)</label>
+                <textarea id="ResumeInput" placeholder="Courte description visible sur la page d'accueil…" rows="4" maxlength="300"></textarea>
+            </div>
+
+        </div>
+
+        <!-- ÉDITEUR -->
+        <div id="main-editor">
+            <div id="sections-container"></div>
+            <div id="add-section-bar">
+                <button class="add-section-btn" onclick="addSection('ImgOnLeft')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:5px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Image à gauche</button>
+                <button class="add-section-btn" onclick="addSection('TextOnly')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:5px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Texte seul</button>
+                <button class="add-section-btn" onclick="addSection('ImgOnRight')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:5px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Image à droite</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+    <script type="module" src="assets/js/addNews.js"></script>
+</body>
+</html>

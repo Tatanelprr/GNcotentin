@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gncotentin.web.app/sitemap.xml

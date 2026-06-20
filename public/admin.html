@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GN Cotentin</title>
+    <link rel="stylesheet" href="assets/css/Dashboard.css">
+</head>
+<body>
+    <div id="dashboard">
+
+        <div id="dashboard-header">
+            <h1>Tableau de bord</h1>
+            <a href="addNews.html" class="btn-primary">+ Nouvelle actualité</a>
+        </div>
+
+        <!-- KPIs -->
+        <div id="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Visites aujourd'hui</div>
+                <div class="kpi-value" id="kpi-today">—</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Visites (30 jours)</div>
+                <div class="kpi-value" id="kpi-total">—</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Moyenne / jour</div>
+                <div class="kpi-value" id="kpi-avg">—</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Actualités publiées</div>
+                <div class="kpi-value" id="kpi-news">—</div>
+            </div>
+        </div>
+
+        <!-- Graphique -->
+        <div class="dash-section">
+            <h2>Visites des 30 derniers jours</h2>
+            <div id="chart-wrapper">
+                <canvas id="visitsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Liste des news -->
+        <div class="dash-section">
+            <h2>Actualités publiées</h2>
+            <div id="newsList"></div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="assets/js/ui.js"></script>
+    <script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>
