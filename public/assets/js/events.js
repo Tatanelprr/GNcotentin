@@ -1,13 +1,11 @@
 import { db } from './firebase-init.js'
 import { collection, query, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js'
 
-const MONTHS_FR    = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
 const MONTHS_SHORT = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']
 
-let allEvents    = []
-let currentYear  = new Date().getFullYear()
-let currentMonth = new Date().getMonth()
-let selectedDay  = null
+let allEvents   = []
+let activeFilter = 'upcoming'
+let rangeActive  = false
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -16,120 +14,127 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (e) {
     console.error('Erreur chargement events :', e)
   }
-  renderCalendar()
-  renderMonthList()
+
+  render()
+
+  // Tabs
+  document.querySelectorAll('.filter-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'))
+      btn.classList.add('active')
+      activeFilter = btn.dataset.filter
+      clearRange()
+      render()
+    })
+  })
+
+  // Filtrer par date
+  document.getElementById('filter-apply').addEventListener('click', () => {
+    const from = document.getElementById('filter-from').value
+    const to   = document.getElementById('filter-to').value
+    if (!from && !to) return
+    rangeActive = true
+    document.getElementById('filter-reset').style.display = 'inline-block'
+    render()
+  })
+
+  // Réinitialiser
+  document.getElementById('filter-reset').addEventListener('click', () => {
+    clearRange()
+    render()
+  })
 })
 
-function eventsForMonth(year, month) {
-  return allEvents.filter(e => e.dateObj && e.dateObj.getFullYear() === year && e.dateObj.getMonth() === month)
+function clearRange() {
+  rangeActive = false
+  document.getElementById('filter-from').value = ''
+  document.getElementById('filter-to').value   = ''
+  document.getElementById('filter-reset').style.display = 'none'
 }
 
-function renderCalendar() {
-  document.getElementById('calendar-month-label').textContent = `${MONTHS_FR[currentMonth]} ${currentYear}`
+function render() {
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
 
-  const monthEvents = eventsForMonth(currentYear, currentMonth)
-  const eventDays   = new Set(monthEvents.map(e => e.dateObj.getDate()))
-  const today       = new Date()
+  const upcomingSection = document.getElementById('events-upcoming-section')
+  const pastSection     = document.getElementById('events-past-section')
+  const rangeSection    = document.getElementById('events-range-section')
 
-  const firstDayRaw = new Date(currentYear, currentMonth, 1).getDay()
-  const startOffset = firstDayRaw === 0 ? 6 : firstDayRaw - 1
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+  if (rangeActive) {
+    upcomingSection.style.display = 'none'
+    pastSection.style.display     = 'none'
+    rangeSection.style.display    = 'block'
 
-  const grid = document.getElementById('cal-days')
-  grid.innerHTML = ''
+    const fromVal = document.getElementById('filter-from').value
+    const toVal   = document.getElementById('filter-to').value
+    const from    = fromVal ? new Date(fromVal) : null
+    const to      = toVal   ? new Date(toVal + 'T23:59:59') : null
 
-  for (let i = 0; i < startOffset; i++) {
-    const cell = document.createElement('div')
-    cell.className = 'cal-day other-month'
-    grid.appendChild(cell)
-  }
+    const filtered = allEvents.filter(e => {
+      if (!e.dateObj) return false
+      if (from && e.dateObj < from) return false
+      if (to   && e.dateObj > to)   return false
+      return true
+    })
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const isToday    = today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === d
-    const hasEvent   = eventDays.has(d)
-    const isSelected = selectedDay === d
-    const cell = document.createElement('div')
-    cell.className = 'cal-day' + (isToday ? ' today' : '') + (hasEvent ? ' has-event' : '') + (isSelected ? ' selected' : '')
-    cell.innerHTML = `<span>${d}</span>${hasEvent ? '<div class="event-dot"></div>' : ''}`
-    if (hasEvent) cell.addEventListener('click', () => selectDay(d))
-    grid.appendChild(cell)
-  }
+    const label = [
+      from ? 'Du ' + from.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '',
+      to   ? 'au ' + to.toLocaleDateString('fr-FR',   { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+    ].filter(Boolean).join(' ')
 
-  document.getElementById('prev-month').onclick = () => {
-    if (currentMonth === 0) { currentMonth = 11; currentYear-- } else currentMonth--
-    selectedDay = null
-    renderCalendar(); renderMonthList(); hideDetail()
-  }
-  document.getElementById('next-month').onclick = () => {
-    if (currentMonth === 11) { currentMonth = 0; currentYear++ } else currentMonth++
-    selectedDay = null
-    renderCalendar(); renderMonthList(); hideDetail()
-  }
-}
-
-function selectDay(day) {
-  selectedDay = day
-  renderCalendar()
-  const events = allEvents.filter(e =>
-    e.dateObj &&
-    e.dateObj.getFullYear() === currentYear &&
-    e.dateObj.getMonth() === currentMonth &&
-    e.dateObj.getDate() === day
-  )
-  if (events.length > 0) showDetail(events[0])
-}
-
-function showDetail(event) {
-  const d       = event.dateObj
-  const dateStr = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-  const detail  = document.getElementById('event-detail')
-  detail.innerHTML = `
-    <h3>${event.title}</h3>
-    <div class="event-meta">
-      <span>📅 ${dateStr}${event.time ? ' à ' + event.time : ''}</span>
-      <span>📍 ${event.location}</span>
-    </div>
-    <p>${event.description.replace(/\n/g, '<br>')}</p>
-    ${event.link ? `<a href="${event.link}" class="event-link" target="_blank" rel="noopener">Voir l'événement →</a>` : ''}
-  `
-  detail.className = 'visible'
-  detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-}
-
-function hideDetail() {
-  const detail = document.getElementById('event-detail')
-  detail.className = ''
-  detail.innerHTML = ''
-}
-
-function renderMonthList() {
-  const events = eventsForMonth(currentYear, currentMonth)
-  const title  = document.getElementById('month-events-title')
-  const list   = document.getElementById('month-events-list')
-
-  title.textContent = events.length > 0 ? `Événements — ${MONTHS_FR[currentMonth]} ${currentYear}` : ''
-
-  if (events.length === 0) {
-    list.innerHTML = '<p id="no-events">Aucun événement ce mois-ci.</p>'
+    document.getElementById('events-range-title').textContent = label || 'Résultats'
+    renderList('events-range-list', filtered, false)
     return
   }
 
-  list.innerHTML = ''
+  rangeSection.style.display = 'none'
+
+  const upcoming = allEvents.filter(e => e.dateObj && e.dateObj >= now)
+  const past     = allEvents.filter(e => e.dateObj && e.dateObj < now).reverse()
+
+  if (activeFilter === 'upcoming') {
+    upcomingSection.style.display = 'block'
+    pastSection.style.display     = 'none'
+    renderList('events-upcoming-list', upcoming, false)
+  } else if (activeFilter === 'past') {
+    upcomingSection.style.display = 'none'
+    pastSection.style.display     = 'block'
+    renderList('events-past-list', past, true)
+  } else {
+    upcomingSection.style.display = 'block'
+    pastSection.style.display     = upcoming.length > 0 && past.length > 0 ? 'block' : past.length > 0 ? 'block' : 'none'
+    renderList('events-upcoming-list', upcoming, false)
+    renderList('events-past-list', past, true)
+  }
+}
+
+function renderList(containerId, events, dimmed) {
+  const container = document.getElementById(containerId)
+  if (events.length === 0) {
+    container.innerHTML = '<p class="events-empty">Aucun événement.</p>'
+    return
+  }
+  container.innerHTML = ''
   events.forEach(event => {
     const d    = event.dateObj
     const item = document.createElement('div')
-    item.className = 'event-list-item'
+    item.className = 'event-list-item' + (dimmed ? ' dimmed' : '')
+
+    const dateStr = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+
     item.innerHTML = `
       <div class="event-date-badge">
         <div class="day">${d.getDate()}</div>
         <div class="month">${MONTHS_SHORT[d.getMonth()]}</div>
+        <div class="year">${d.getFullYear()}</div>
       </div>
       <div class="event-list-info">
         <p class="event-list-title">${event.title}</p>
-        <p class="event-list-location">📍 ${event.location}</p>
+        <p class="event-list-meta">📅 ${dateStr}${event.time ? ' à ' + event.time : ''} &nbsp;·&nbsp; 📍 ${event.location}</p>
+        ${event.description ? `<p class="event-list-desc">${event.description.replace(/\n/g, '<br>')}</p>` : ''}
+        ${event.link ? `<a href="${event.link}" class="event-list-link" target="_blank" rel="noopener">Voir l'événement →</a>` : ''}
       </div>
     `
-    item.addEventListener('click', () => { selectedDay = d.getDate(); renderCalendar(); showDetail(event) })
-    list.appendChild(item)
+    container.appendChild(item)
   })
 }

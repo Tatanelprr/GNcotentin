@@ -16,30 +16,36 @@
     <div id="events-container">
         <h1 id="events-page-title">Événements</h1>
 
-        <div id="calendar">
-            <div id="calendar-header">
-                <button class="cal-nav-btn" id="prev-month">&#8249;</button>
-                <h2 id="calendar-month-label"></h2>
-                <button class="cal-nav-btn" id="next-month">&#8250;</button>
+        <div id="events-filters">
+            <div id="filter-tabs">
+                <button class="filter-tab active" data-filter="upcoming">À venir</button>
+                <button class="filter-tab" data-filter="past">Passés</button>
+                <button class="filter-tab" data-filter="all">Tous</button>
             </div>
-            <div id="calendar-grid">
-                <div class="cal-weekdays">
-                    <div class="cal-weekday">Lu</div>
-                    <div class="cal-weekday">Ma</div>
-                    <div class="cal-weekday">Me</div>
-                    <div class="cal-weekday">Je</div>
-                    <div class="cal-weekday">Ve</div>
-                    <div class="cal-weekday">Sa</div>
-                    <div class="cal-weekday">Di</div>
-                </div>
-                <div class="cal-days" id="cal-days"></div>
+            <div id="filter-dates">
+                <span class="filter-date-label">Entre le</span>
+                <input type="date" id="filter-from">
+                <span class="filter-date-label">et le</span>
+                <input type="date" id="filter-to">
+                <button id="filter-apply">Filtrer</button>
+                <button id="filter-reset" style="display:none">Réinitialiser</button>
             </div>
         </div>
 
-        <div id="event-detail"></div>
+        <div id="events-upcoming-section">
+            <p class="events-section-title">À venir</p>
+            <div id="events-upcoming-list"></div>
+        </div>
 
-        <p id="month-events-title"></p>
-        <div id="month-events-list"></div>
+        <div id="events-past-section">
+            <p class="events-section-title past">Passés</p>
+            <div id="events-past-list"></div>
+        </div>
+
+        <div id="events-range-section" style="display:none">
+            <p class="events-section-title" id="events-range-title"></p>
+            <div id="events-range-list"></div>
+        </div>
     </div>
 
     <script type="module" src="assets/js/ui.js"></script>
