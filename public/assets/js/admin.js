@@ -8,7 +8,7 @@ onAuthStateChanged(auth, user => {
 })
 
 async function loadDashboard() {
-  await Promise.all([loadVisits(), loadNews(), loadEvents()])
+  await Promise.all([loadVisits(), loadNews(), loadEvents(), loadGalerie()])
 }
 
 async function loadVisits() {
@@ -115,6 +115,45 @@ async function loadNews() {
     console.error('Erreur news :', e)
     container.innerHTML = '<p id="no-news-admin">Erreur lors du chargement.</p>'
   }
+}
+
+async function loadGalerie() {
+  const container = document.getElementById('galerieList')
+  try {
+    const snap = await getDocs(query(collection(db, 'galerie'), orderBy('eventDate', 'desc')))
+    if (snap.empty) { container.innerHTML = '<p id="no-news-admin">Aucun album.</p>'; return }
+    snap.forEach(d => {
+      const album   = d.data()
+      const date    = album.eventDate?.toDate?.()
+      const dateStr = date ? date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+      const count   = album.photos?.length ?? 0
+      const item    = document.createElement('div')
+      item.className = 'news-admin-item'
+      item.innerHTML = `
+        <div class="news-admin-info">
+          <div class="news-admin-title">${album.eventTitle}</div>
+          <div class="news-admin-date">${dateStr} · ${count} photo${count > 1 ? 's' : ''}</div>
+        </div>
+        <div class="news-admin-actions">
+          <a href="addGalerie.html?id=${d.id}" class="btn-view">Gérer</a>
+          <button class="btn-delete" data-id="${d.id}">Supprimer</button>
+        </div>
+      `
+      item.querySelector('.btn-delete').addEventListener('click', () => deleteAlbum(d.id, item))
+      container.appendChild(item)
+    })
+  } catch (e) {
+    console.error('Erreur galerie admin :', e)
+    container.innerHTML = '<p id="no-news-admin">Erreur lors du chargement.</p>'
+  }
+}
+
+async function deleteAlbum(id, element) {
+  if (!confirm('Supprimer cet album et toutes ses photos ?')) return
+  try {
+    await deleteDoc(doc(db, 'galerie', id))
+    element.remove()
+  } catch (e) { console.error(e); alert('Erreur lors de la suppression.') }
 }
 
 async function loadEvents() {
