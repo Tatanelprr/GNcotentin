@@ -1,0 +1,37 @@
+:root { --primary: rgb(97,0,0); --bg: #f4f1f0; --text: #1a1a1a; --text-muted: #666; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); font-family: Arial, sans-serif; overflow-x: hidden; }
+#header { margin-bottom: 0 !important; }
+
+#contact-nav { background: white; border-bottom: 1px solid #e8e0e0; padding: 16px 32px; display: flex; align-items: center; gap: 8px; font-size: 15px; color: #aaa; }
+#contact-nav a { color: var(--primary); text-decoration: none; font-weight: bold; }
+#contact-nav a:hover { text-decoration: underline; }
+#contact-nav .sep { color: #ccc; }
+
+#contact-container { max-width: 640px; margin: 0 auto; padding: 40px 24px 60px; }
+#contact-title { font-family: Impact, Arial, sans-serif; color: var(--primary); font-size: 36px; margin: 0 0 8px; text-align: left; }
+#contact-subtitle { font-size: 15px; color: var(--text-muted); margin: 0 0 32px; }
+
+.contact-field { margin-bottom: 18px; }
+.contact-field label { display: block; font-size: 12px; font-weight: bold; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.contact-field input, .contact-field textarea {
+    width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 12px 14px;
+    font-size: 15px; font-family: Arial, sans-serif; background: white;
+    transition: border-color 0.2s; resize: vertical;
+}
+.contact-field input:focus, .contact-field textarea:focus { outline: none; border-color: var(--primary); }
+
+#contact-submit { background: var(--primary); color: white; border: none; border-radius: 25px; padding: 12px 32px; font-size: 15px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; font-family: Arial, sans-serif; display: inline-flex; align-items: center; gap: 8px; }
+#contact-submit:hover { opacity: 0.85; }
+#contact-submit:disabled { opacity: 0.6; cursor: default; }
+
+.spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#contact-success { display: none; background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 20px; margin-top: 20px; color: #166534; font-size: 15px; }
+#contact-error   { display: none; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 10px; padding: 20px; margin-top: 20px; color: #991b1b; font-size: 15px; }
+
+@media (max-width: 600px) {
+  #contact-container { padding: 24px 16px 40px; }
+  #contact-nav { padding: 12px 16px; font-size: 13px; }
+}

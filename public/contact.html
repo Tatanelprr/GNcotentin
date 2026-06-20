@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nous contacter – GN Cotentin</title>
+    <link rel="stylesheet" href="assets/css/Contact.css">
+</head>
+<body>
+    <div id="contact-nav">
+        <a href="accueil.html">Accueil</a>
+        <span class="sep">›</span>
+        <span>Nous contacter</span>
+    </div>
+
+    <div id="contact-container">
+        <h1 id="contact-title">Nous contacter</h1>
+        <p id="contact-subtitle">Une question, une suggestion ? Écrivez-nous, nous répondrons dans les meilleurs délais.</p>
+
+        <form id="contact-form">
+            <div class="contact-field">
+                <label for="contact-name">Nom *</label>
+                <input type="text" id="contact-name" name="name" placeholder="Votre nom" required maxlength="100">
+            </div>
+            <div class="contact-field">
+                <label for="contact-email">Email *</label>
+                <input type="email" id="contact-email" name="email" placeholder="votre@email.com" required>
+            </div>
+            <div class="contact-field">
+                <label for="contact-subject">Sujet</label>
+                <input type="text" id="contact-subject" name="subject" placeholder="Objet de votre message" maxlength="150">
+            </div>
+            <div class="contact-field">
+                <label for="contact-message">Message *</label>
+                <textarea id="contact-message" name="message" rows="6" placeholder="Votre message…" required maxlength="2000"></textarea>
+            </div>
+            <button type="submit" id="contact-submit">
+                <span id="submit-label">Envoyer</span>
+                <span class="spinner" id="submit-spinner"></span>
+            </button>
+        </form>
+
+        <div id="contact-success">✓ Message envoyé ! Nous vous répondrons dès que possible.</div>
+        <div id="contact-error">Une erreur est survenue. Veuillez réessayer ou nous écrire directement à <a href="mailto:Gcncotentin@gmail.com" style="color:inherit;font-weight:bold;">Gcncotentin@gmail.com</a>.</div>
+    </div>
+
+    <script type="module" src="assets/js/ui.js"></script>
+    <script type="module" src="assets/js/contact.js"></script>
+</body>
+</html>

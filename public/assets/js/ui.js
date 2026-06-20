@@ -58,7 +58,7 @@ function buildHeader(isAdmin) {
         <button class="header_button" onclick="location.href='news-list.html'">Actualités</button>
         <button class="header_button" onclick="location.href='events.html'">Événements</button>
         <button class="header_button" onclick="location.href='galerie.html'">Galerie</button>
-        <button class="header_button" onclick="location.href='mailto:Gcncotentin@gmail.com'">Nous Contacter</button>
+        <button class="header_button" onclick="location.href='contact.html'">Nous Contacter</button>
         <button class="header_button" onclick="location.href='login.html'">Connexion</button>
       `}
     </div>
