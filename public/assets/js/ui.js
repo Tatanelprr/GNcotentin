@@ -14,6 +14,7 @@ function buildHeader(isAdmin) {
     .header_button:hover { background-color: white; color: var(--primary-color); }
     .dropdown { position: relative; display: inline-block; }
     .dropdown-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 180px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); z-index: 1000; border-radius: 8px; overflow: hidden; top: calc(100% + 6px); }
+    .dropdown-content::before { content: ''; position: absolute; top: -6px; left: 0; right: 0; height: 6px; }
     .dropdown-content a { color: var(--primary-color); padding: 12px 16px; text-decoration: none; display: block; font-weight: bold; font-size: 14px; }
     .dropdown-content a:hover { background-color: #f0e8e8; }
     .dropdown:hover .dropdown-content { display: block; }
