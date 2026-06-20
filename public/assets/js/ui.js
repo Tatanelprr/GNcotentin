@@ -13,10 +13,24 @@ function buildHeader(isAdmin) {
     .header_button { height: 40px; padding: 0 20px; background-color: var(--primary-color); border: 2px solid white; border-radius: 20px; color: white; font-size: 16px; cursor: pointer; transition: 0.3s; font-family: Arial, sans-serif; white-space: nowrap; }
     .header_button:hover { background-color: white; color: var(--primary-color); }
     .dropdown { position: relative; display: inline-block; }
-    .dropdown-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 160px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); z-index: 1000; border-radius: 5px; overflow: hidden; }
-    .dropdown-content a { color: var(--primary-color); padding: 12px 16px; text-decoration: none; display: block; font-weight: bold; }
-    .dropdown-content a:hover { background-color: #ddd; }
+    .dropdown-content { display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 180px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); z-index: 1000; border-radius: 8px; overflow: hidden; top: calc(100% + 6px); }
+    .dropdown-content a { color: var(--primary-color); padding: 12px 16px; text-decoration: none; display: block; font-weight: bold; font-size: 14px; }
+    .dropdown-content a:hover { background-color: #f0e8e8; }
     .dropdown:hover .dropdown-content { display: block; }
+
+    /* Burger */
+    #burger-btn { display: none; background: none; border: 2px solid rgba(255,255,255,0.7); color: white; border-radius: 8px; width: 44px; height: 44px; cursor: pointer; font-size: 22px; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* Mobile menu overlay */
+    #mobile-menu { display: none; position: fixed; inset: 0; background: rgb(97,0,0); z-index: 9999; flex-direction: column; padding: 24px 28px; overflow-y: auto; }
+    #mobile-menu.open { display: flex; }
+    #mobile-menu-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+    #mobile-menu-logo { color: white; font-family: Impact, Arial, sans-serif; font-size: 22px; }
+    #mobile-menu-close { background: none; border: 2px solid rgba(255,255,255,0.5); color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+    #mobile-menu a { color: white; text-decoration: none; font-size: 20px; font-weight: bold; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.12); font-family: Arial, sans-serif; display: block; }
+    #mobile-menu a:last-child { border-bottom: none; }
+    #mobile-menu a:active { opacity: 0.7; }
+
     @media (max-width: 1100px) {
       .header_button { padding: 0 10px; font-size: 13px; }
       #MainTitle { font-size: clamp(16px, 2.5vw, 50px); }
@@ -26,13 +40,15 @@ function buildHeader(isAdmin) {
       .header_element { gap: 6px; }
     }
     @media (max-width: 768px) {
-      #header { height: auto; flex-direction: column; padding: 15px; overflow: visible; }
-      .header-left { width: 100%; justify-content: center; margin-bottom: 15px; }
-      #MainLogo { height: 60px; }
-      #MainTitle { font-size: 20px; margin-left: 10px; }
-      .header_element { width: 100%; flex-wrap: wrap; justify-content: center; }
+      #header { height: auto; flex-direction: row; padding: 14px 20px; overflow: visible; }
+      .header-left { height: auto; margin-bottom: 0; }
+      #MainLogo { height: 52px; }
+      #MainTitle { font-size: 17px; }
+      .header_element { display: none; }
+      #burger-btn { display: flex; }
     }
   </style>
+
   <div id="header">
     <div class="header-left">
       <img src="assets/img/ui/viking.png" id="MainLogo" alt="Logo">
@@ -52,16 +68,48 @@ function buildHeader(isAdmin) {
             <a href="addGalerie.html">Nouvel album</a>
           </div>
         </div>
-        <button class="header_button" id="logoutLink">Déconnexion</button>
+        <button class="header_button logout-trigger">Déconnexion</button>
       ` : `
         <button class="header_button" onclick="location.href='accueil.html'">Accueil</button>
-        <button class="header_button" onclick="location.href='news-list.html'">Actualités</button>
         <button class="header_button" onclick="location.href='events.html'">Événements</button>
-        <button class="header_button" onclick="location.href='galerie.html'">Galerie</button>
+        <div class="dropdown">
+          <button class="header_button">Pages ▾</button>
+          <div class="dropdown-content">
+            <a href="news-list.html">Actualités</a>
+            <a href="galerie.html">Galerie</a>
+          </div>
+        </div>
         <button class="header_button" onclick="location.href='contact.html'">Nous Contacter</button>
         <button class="header_button" onclick="location.href='login.html'">Connexion</button>
       `}
     </div>
+    <button id="burger-btn" onclick="document.getElementById('mobile-menu').classList.add('open')">☰</button>
+  </div>
+
+  <!-- Menu mobile -->
+  <div id="mobile-menu">
+    <div id="mobile-menu-header">
+      <span id="mobile-menu-logo">GN Cotentin</span>
+      <button id="mobile-menu-close" onclick="document.getElementById('mobile-menu').classList.remove('open')">×</button>
+    </div>
+    ${isAdmin ? `
+      <a href="accueil.html">Accueil</a>
+      <a href="news-list.html">Actualités</a>
+      <a href="events.html">Événements</a>
+      <a href="galerie.html">Galerie</a>
+      <a href="admin.html">Dashboard</a>
+      <a href="addNews.html">+ Nouvelle actualité</a>
+      <a href="addEvent.html">+ Nouvel événement</a>
+      <a href="addGalerie.html">+ Nouvel album</a>
+      <a href="#" class="logout-trigger">Déconnexion</a>
+    ` : `
+      <a href="accueil.html">Accueil</a>
+      <a href="events.html">Événements</a>
+      <a href="news-list.html">Actualités</a>
+      <a href="galerie.html">Galerie</a>
+      <a href="contact.html">Nous Contacter</a>
+      <a href="login.html">Connexion</a>
+    `}
   </div>`
 }
 
@@ -115,10 +163,12 @@ onAuthStateChanged(auth, user => {
   document.body.insertAdjacentHTML('afterbegin', buildHeader(!!user))
   document.body.insertAdjacentHTML('beforeend', buildFooter())
   if (user) {
-    document.getElementById('logoutLink')?.addEventListener('click', async e => {
-      e.preventDefault()
-      await signOut(auth)
-      location.href = 'accueil.html'
+    document.querySelectorAll('.logout-trigger').forEach(el => {
+      el.addEventListener('click', async e => {
+        e.preventDefault()
+        await signOut(auth)
+        location.href = 'accueil.html'
+      })
     })
   }
 })
