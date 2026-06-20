@@ -192,7 +192,7 @@ body {
 
 .badge-draft {
     display: inline-block;
-    background: #f97316;
+    background: #888;
     color: white;
     font-size: 10px;
     font-weight: bold;

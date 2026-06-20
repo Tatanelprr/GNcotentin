@@ -59,8 +59,8 @@ async function loadExistingNews() {
     if (news.status === 'draft') {
       document.getElementById('publish-label').textContent = 'Publier'
     } else {
-      document.getElementById('btn-draft').style.display   = 'none'
-      document.getElementById('btn-preview').style.display = 'none'
+      document.getElementById('btn-draft').style.display = 'none'
+      document.getElementById('btn-preview').onclick = () => window.open(`news.html?id=${newsId}`, '_blank')
       document.getElementById('publish-label').textContent = 'Mettre à jour'
     }
     document.querySelector('#topbar h1').innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:8px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Modifier l'actualité`
@@ -242,9 +242,9 @@ window.saveDraft = async () => {
   spinner.style.display = 'inline-block'
   try {
     await saveAsDraft()
+    location.href = 'admin.html'
   } catch (e) {
     console.error(e); alert('Erreur lors de la sauvegarde du brouillon.')
-  } finally {
     label.style.display   = 'inline'
     spinner.style.display = 'none'
   }
