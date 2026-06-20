@@ -72,15 +72,23 @@ async function loadNews() {
   try {
     const snap = await getDocs(query(collection(db, 'news'), orderBy('createdAt', 'desc')))
 
-    document.getElementById('kpi-news').textContent = snap.size
+    const allDocs = snap.docs
+    const publishedCount = allDocs.filter(d => d.data().status !== 'draft').length
+    document.getElementById('kpi-news').textContent = publishedCount
 
-    if (snap.empty) {
-      container.innerHTML = '<p id="no-news-admin">Aucune actualité publiée.</p>'
+    if (allDocs.length === 0) {
+      container.innerHTML = '<p id="no-news-admin">Aucune actualité.</p>'
       return
     }
 
-    snap.forEach(d => {
+    const sorted = [
+      ...allDocs.filter(d => d.data().status === 'draft'),
+      ...allDocs.filter(d => d.data().status !== 'draft')
+    ]
+
+    sorted.forEach(d => {
       const news = d.data()
+      const isDraft = news.status === 'draft'
       const date = news.createdAt?.toDate?.()
       const dateStr = date
         ? date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -92,7 +100,7 @@ async function loadNews() {
         <img class="news-admin-img" src="${news.coverImg || ''}" alt="" onerror="this.style.display='none'">
         <div class="news-admin-info">
           <div class="news-admin-title">${news.title}</div>
-          <div class="news-admin-date">${dateStr}</div>
+          <div class="news-admin-date">${isDraft ? '<span class="badge-draft">Brouillon</span>' : ''}${dateStr}</div>
         </div>
         <div class="news-admin-actions">
           <a href="news.html?id=${d.id}" class="btn-view" target="_blank">Voir</a>
