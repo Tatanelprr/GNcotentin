@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Événements – GN Cotentin</title>
+    <link rel="stylesheet" href="assets/css/Events.css">
+</head>
+<body>
+    <div id="events-nav">
+        <a href="accueil.html">Accueil</a>
+        <span class="sep">›</span>
+        <span>Événements</span>
+    </div>
+
+    <div id="events-container">
+        <h1 id="events-page-title">Événements</h1>
+
+        <div id="calendar">
+            <div id="calendar-header">
+                <button class="cal-nav-btn" id="prev-month">&#8249;</button>
+                <h2 id="calendar-month-label"></h2>
+                <button class="cal-nav-btn" id="next-month">&#8250;</button>
+            </div>
+            <div id="calendar-grid">
+                <div class="cal-weekdays">
+                    <div class="cal-weekday">Lu</div>
+                    <div class="cal-weekday">Ma</div>
+                    <div class="cal-weekday">Me</div>
+                    <div class="cal-weekday">Je</div>
+                    <div class="cal-weekday">Ve</div>
+                    <div class="cal-weekday">Sa</div>
+                    <div class="cal-weekday">Di</div>
+                </div>
+                <div class="cal-days" id="cal-days"></div>
+            </div>
+        </div>
+
+        <div id="event-detail"></div>
+
+        <p id="month-events-title"></p>
+        <div id="month-events-list"></div>
+    </div>
+
+    <script type="module" src="assets/js/ui.js"></script>
+    <script type="module" src="assets/js/events.js"></script>
+</body>
+</html>
